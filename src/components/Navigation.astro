@@ -1,28 +1,24 @@
 ---
+import { NAV_ITEMS } from "../config";
+
 const currentPath = Astro.url.pathname;
-const navItems = [
-  { href: '/', label: '홈' },
-  { href: '/blog', label: '블로그' },
-  { href: '/categories', label: '카테고리' },
-  { href: '/tags', label: '태그' },
-  { href: '/about', label: '소개' },
-  { href: '/search', label: '검색' },
-];
 ---
 
 <nav class="navigation">
   <ul class="nav-list">
-    {navItems.map(item => (
-      <li class="nav-item">
-        <a 
-          href={item.href} 
-          class={`nav-link ${currentPath === item.href ? 'active' : ''}`}
-          aria-current={currentPath === item.href ? 'page' : undefined}
-        >
-          {item.label}
-        </a>
-      </li>
-    ))}
+    {
+      NAV_ITEMS.map((item) => (
+        <li class="nav-item">
+          <a
+            href={item.href}
+            class={`nav-link ${currentPath === item.href ? "active" : ""}`}
+            aria-current={currentPath === item.href ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
   </ul>
 </nav>
 
@@ -30,7 +26,7 @@ const navItems = [
   .navigation {
     display: flex;
   }
-  
+
   .nav-list {
     display: flex;
     list-style: none;
@@ -38,11 +34,11 @@ const navItems = [
     margin: 0;
     padding: 0;
   }
-  
+
   .nav-item {
     margin: 0;
   }
-  
+
   .nav-link {
     display: block;
     padding: 0.5rem 1rem;
@@ -51,17 +47,17 @@ const navItems = [
     border-radius: var(--radius-md);
     transition: all var(--transition-base);
   }
-  
+
   .nav-link:hover {
     background-color: var(--bg-tertiary);
     color: var(--primary-dark);
   }
-  
+
   .nav-link.active {
     background-color: var(--primary-light);
     color: var(--primary-dark);
   }
-  
+
   @media (max-width: 768px) {
     .navigation {
       display: none;
@@ -73,16 +69,16 @@ const navItems = [
       border-bottom: 1px solid var(--border);
       padding: 1rem;
     }
-    
+
     .navigation.mobile-open {
       display: block;
     }
-    
+
     .nav-list {
       flex-direction: column;
       gap: 0.25rem;
     }
-    
+
     .nav-link {
       padding: 0.75rem 1rem;
     }

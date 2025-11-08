@@ -4,6 +4,7 @@ import PageLayout from "../layouts/PageLayout.astro";
 import PostList from "../components/PostList.astro";
 import CategoryList from "../components/CategoryList.astro";
 import TagCloud from "../components/TagCloud.astro";
+import { SITE_CONFIG } from "../config";
 
 const allPosts = await getCollection("blog", ({ data }) => !data.draft);
 const recentPosts = allPosts
@@ -12,20 +13,24 @@ const recentPosts = allPosts
 ---
 
 <PageLayout
-  title="Planetary Pulsar - 기술 블로그"
-  description="기술과 생각을 공유하는 블로그입니다. 최신 웹 개발, 프로그래밍, 튜토리얼을 만나보세요."
+  title={`${SITE_CONFIG.siteName} - ${SITE_CONFIG.sections.recentPosts}`}
+  description={SITE_CONFIG.siteDescription}
 >
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
-      <h1 class="hero-title">안녕하세요! 👋</h1>
-      <p class="hero-description">
-        기술과 생각을 공유하는 블로그입니다.<br />
-        웹 개발, 프로그래밍, 그리고 다양한 주제의 글을 만나보세요.
-      </p>
+      <h1 class="hero-title">{SITE_CONFIG.hero.title}</h1>
+      <p
+        class="hero-description"
+        set:html={SITE_CONFIG.hero.description.replace("\n", "<br />")}
+      />
       <div class="hero-actions">
-        <a href="/blog" class="btn btn-primary btn-lg">블로그 둘러보기</a>
-        <a href="/about" class="btn btn-outline btn-lg">소개 보기</a>
+        <a href="/blog" class="btn btn-primary btn-lg"
+          >{SITE_CONFIG.hero.primaryButton}</a
+        >
+        <a href="/about" class="btn btn-outline btn-lg"
+          >{SITE_CONFIG.hero.secondaryButton}</a
+        >
       </div>
     </div>
   </section>
@@ -33,9 +38,9 @@ const recentPosts = allPosts
   <!-- Recent Posts Section -->
   <section class="recent-posts" style="margin-top: 4rem;">
     <div class="section-header">
-      <h2>최근 포스트</h2>
+      <h2>{SITE_CONFIG.sections.recentPosts}</h2>
       <a href="/blog" class="view-all-link">
-        전체보기
+        {SITE_CONFIG.sections.allPosts}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
