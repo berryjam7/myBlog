@@ -6,7 +6,7 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://38a232dd.myblog-akg.pages.dev', // Update with your Cloudflare Pages URL
+    site: 'https://myblog-akg.pages.dev',
     output: 'static',
     adapter: cloudflare(),
     integrations: [

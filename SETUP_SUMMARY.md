@@ -309,7 +309,7 @@ public/
 
 3. **환경 변수** (선택사항)
    ```
-   SITE_URL: https://38a232dd.myblog-akg.pages.dev
+   SITE_URL: https://myblog-akg.pages.dev
    ```
 
 4. **배포**
