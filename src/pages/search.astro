@@ -1,0 +1,254 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const searchData = allPosts.map(post => ({
+  slug: post.slug,
+  title: post.data.title,
+  description: post.data.description,
+  category: post.data.category,
+  tags: post.data.tags,
+  content: post.body
+}));
+---
+
+<PageLayout 
+  title="검색"
+  description="블로그 포스트를 검색하세요."
+>
+  <div class="search-page">
+    <header class="page-header">
+      <h1>검색</h1>
+      <p>찾고 계신 내용을 검색해보세요</p>
+    </header>
+    
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input 
+          type="search" 
+          id="search-input"
+          class="search-input" 
+          placeholder="검색어를 입력하세요..."
+          aria-label="Search posts"
+          autofocus
+        />
+      </div>
+      
+      <div id="search-stats" class="search-stats" style="display: none;"></div>
+      <div id="search-results" class="search-results"></div>
+    </div>
+  </div>
+</PageLayout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .page-header p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+  }
+  
+  .search-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .search-input-wrapper {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    font-size: 1.125rem;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    transition: all var(--transition-base);
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(135, 206, 235, 0.1);
+  }
+  
+  .search-stats {
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  
+  .search-results {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .search-result-item {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    transition: all var(--transition-base);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  
+  .search-result-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-hover);
+    border-color: var(--primary);
+  }
+  
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .result-category {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    border-radius: var(--radius-full);
+    font-weight: 500;
+  }
+  
+  .result-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+  
+  .result-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+  
+  .result-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .result-tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  
+  .no-results {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-secondary);
+  }
+  
+  .no-results svg {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+</style>
+
+<script define:vars={{ searchData }}>
+  // Simple client-side search (can be replaced with Fuse.js for better results)
+  const searchInput = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+  const searchStats = document.getElementById('search-stats');
+  
+  function performSearch(query) {
+    if (!query || query.trim().length < 2) {
+      searchResults.innerHTML = '';
+      searchStats.style.display = 'none';
+      return;
+    }
+    
+    const lowerQuery = query.toLowerCase();
+    const results = searchData.filter(post => {
+      return post.title.toLowerCase().includes(lowerQuery) ||
+             post.description.toLowerCase().includes(lowerQuery) ||
+             post.content.toLowerCase().includes(lowerQuery) ||
+             post.category.toLowerCase().includes(lowerQuery) ||
+             post.tags.some(tag => tag.toLowerCase().includes(lowerQuery));
+    });
+    
+    // Show stats
+    searchStats.style.display = 'block';
+    searchStats.textContent = `${results.length}개의 검색 결과`;
+    
+    // Display results
+    if (results.length === 0) {
+      searchResults.innerHTML = `
+        <div class="no-results">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <h3>검색 결과가 없습니다</h3>
+          <p>다른 키워드로 검색해보세요.</p>
+        </div>
+      `;
+    } else {
+      searchResults.innerHTML = results.map(post => `
+        <a href="/blog/${post.slug}" class="search-result-item">
+          <div class="result-header">
+            <span class="result-category">${post.category}</span>
+          </div>
+          <h3 class="result-title">${post.title}</h3>
+          <p class="result-description">${post.description}</p>
+          <div class="result-tags">
+            ${post.tags.map(tag => `<span class="result-tag">#${tag}</span>`).join('')}
+          </div>
+        </a>
+      `).join('');
+    }
+  }
+  
+  // Debounce function
+  let debounceTimer;
+  searchInput.addEventListener('input', (e) => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      performSearch(e.target.value);
+    }, 300);
+  });
+  
+  // Check for query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const queryParam = urlParams.get('q');
+  if (queryParam) {
+    searchInput.value = queryParam;
+    performSearch(queryParam);
+  }
+</script>

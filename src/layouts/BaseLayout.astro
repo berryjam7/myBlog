@@ -1,0 +1,199 @@
+---
+import "../styles/global.css";
+
+export interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: "website" | "article";
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  author?: string;
+  tags?: string[];
+}
+
+const {
+  title,
+  description,
+  image = "/default-og-image.jpg",
+  type = "website",
+  publishedTime,
+  modifiedTime,
+  author,
+  tags,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = new URL(image, Astro.site);
+
+// Structured Data
+const structuredData =
+  type === "article"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: title,
+        description: description,
+        image: imageURL.toString(),
+        datePublished: publishedTime?.toISOString(),
+        dateModified: modifiedTime?.toISOString(),
+        author: {
+          "@type": "Person",
+          name: author || "Admin",
+        },
+        keywords: tags?.join(", "),
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: title,
+        description: description,
+        url: canonicalURL.toString(),
+      };
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageURL} />
+    {
+      type === "article" && publishedTime && (
+        <meta
+          property="article:published_time"
+          content={publishedTime.toISOString()}
+        />
+      )
+    }
+    {
+      type === "article" && modifiedTime && (
+        <meta
+          property="article:modified_time"
+          content={modifiedTime.toISOString()}
+        />
+      )
+    }
+    {
+      type === "article" && author && (
+        <meta property="article:author" content={author} />
+      )
+    }
+    {
+      type === "article" &&
+        tags &&
+        tags.map((tag) => <meta property="article:tag" content={tag} />)
+    }
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={imageURL} />
+
+    <!-- Structured Data -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(structuredData)}
+    />
+
+    <!-- RSS Feed -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="RSS Feed"
+      href="/rss.xml"
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <slot />
+
+    <!-- Dark Mode Toggle Script -->
+    <script is:inline>
+      // Initialize theme from localStorage or system preference
+      const theme = (() => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      })();
+
+      if (theme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+      }
+
+      window.localStorage.setItem("theme", theme);
+    </script>
+
+    <!-- Scroll to Top Button -->
+    <script>
+      // Scroll to top functionality
+      const scrollBtn = document.querySelector(".scroll-to-top");
+      if (scrollBtn) {
+        window.addEventListener("scroll", () => {
+          if (window.scrollY > 300) {
+            scrollBtn.classList.add("visible");
+          } else {
+            scrollBtn.classList.remove("visible");
+          }
+        });
+
+        scrollBtn.addEventListener("click", () => {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        });
+      }
+    </script>
+
+    <!-- Reading Progress Bar -->
+    <script>
+      const progressBar = document.querySelector(
+        ".reading-progress",
+      ) as HTMLElement;
+      if (progressBar) {
+        window.addEventListener("scroll", () => {
+          const winScroll =
+            document.body.scrollTop || document.documentElement.scrollTop;
+          const height =
+            document.documentElement.scrollHeight -
+            document.documentElement.clientHeight;
+          const scrolled = (winScroll / height) * 100;
+          progressBar.style.transform = `scaleX(${scrolled / 100})`;
+        });
+      }
+    </script>
+  </body>
+</html>

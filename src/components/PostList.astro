@@ -1,0 +1,47 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import PostCard from './PostCard.astro';
+
+export interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+<div class="post-list grid grid-cols-3">
+  {posts.map(post => (
+    <PostCard post={post} />
+  ))}
+</div>
+
+{posts.length === 0 && (
+  <div class="no-posts">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="12" y1="18" x2="12" y2="12"></line>
+      <line x1="9" y1="15" x2="15" y2="15"></line>
+    </svg>
+    <h3>포스트가 없습니다</h3>
+    <p>아직 게시된 포스트가 없습니다. 나중에 다시 방문해주세요!</p>
+  </div>
+)}
+
+<style>
+  .no-posts {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-secondary);
+  }
+  
+  .no-posts svg {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+  
+  .no-posts h3 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+</style>

@@ -1,0 +1,107 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+
+// Get all tags with post counts
+const tagMap = new Map<string, number>();
+allPosts.forEach(post => {
+  post.data.tags.forEach(tag => {
+    tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
+  });
+});
+
+const tags = Array.from(tagMap.entries())
+  .sort((a, b) => b[1] - a[1]); // Sort by count descending
+
+// Calculate font size based on count
+const maxCount = Math.max(...tags.map(t => t[1]));
+const minCount = Math.min(...tags.map(t => t[1]));
+
+function getFontSize(count: number): number {
+  const ratio = (count - minCount) / (maxCount - minCount || 1);
+  return 1 + ratio * 1.5; // 1rem to 2.5rem
+}
+---
+
+<PageLayout 
+  title="태그"
+  description="블로그의 모든 태그를 둘러보세요."
+>
+  <div class="tags-page">
+    <header class="page-header">
+      <h1>태그</h1>
+      <p>총 {tags.length}개의 태그</p>
+    </header>
+    
+    <div class="tag-cloud-large">
+      {tags.map(([tag, count]) => (
+        <a 
+          href={`/tags/${tag}`} 
+          class="tag-link"
+          style={`font-size: ${getFontSize(count)}rem;`}
+          title={`${count}개의 포스트`}
+        >
+          #{tag}
+          <span class="tag-count">{count}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</PageLayout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .page-header p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+  }
+  
+  .tag-cloud-large {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+  }
+  
+  .tag-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    color: var(--primary-dark);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+  }
+  
+  .tag-link:hover {
+    background-color: var(--primary-light);
+    transform: scale(1.1);
+  }
+  
+  .tag-count {
+    font-size: 0.875rem;
+    background-color: var(--primary);
+    color: white;
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+  }
+</style>

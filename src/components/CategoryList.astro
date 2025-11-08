@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+
+// Get all categories with post counts
+const categoryMap = new Map<string, number>();
+allPosts.forEach(post => {
+  const category = post.data.category;
+  categoryMap.set(category, (categoryMap.get(category) || 0) + 1);
+});
+
+const categories = Array.from(categoryMap.entries())
+  .sort((a, b) => b[1] - a[1]); // Sort by count descending
+---
+
+<div class="category-list">
+  <h3 class="list-title">카테고리</h3>
+  <ul class="categories">
+    {categories.map(([category, count]) => (
+      <li class="category-item">
+        <a href={`/categories/${category}`} class="category-link">
+          <span class="category-name">{category}</span>
+          <span class="category-count">{count}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .category-list {
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+  }
+  
+  .list-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .categories {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .category-item {
+    margin-bottom: 0.5rem;
+  }
+  
+  .category-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    transition: all var(--transition-base);
+    text-decoration: none;
+  }
+  
+  .category-link:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--primary-dark);
+  }
+  
+  .category-name {
+    font-weight: 500;
+  }
+  
+  .category-count {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+</style>

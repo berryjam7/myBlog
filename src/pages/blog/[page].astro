@@ -1,0 +1,73 @@
+---
+import { getCollection } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import PostList from "../../components/PostList.astro";
+import Pagination from "../../components/Pagination.astro";
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const POSTS_PER_PAGE = 9;
+  const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+  const sortedPosts = allPosts.sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+
+  // Generate paths for pagination
+  const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
+  const paths = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    const start = (i - 1) * POSTS_PER_PAGE;
+    const end = start + POSTS_PER_PAGE;
+    paths.push({
+      params: { page: i.toString() },
+      props: {
+        posts: sortedPosts.slice(start, end),
+        currentPage: i,
+        totalPages: totalPages,
+      },
+    });
+  }
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+const { posts, currentPage, totalPages } = Astro.props;
+---
+
+<PageLayout
+  title={`블로그 - 페이지 ${currentPage}`}
+  description={`블로그 포스트 목록 - ${currentPage} 페이지`}
+>
+  <div class="blog-page">
+    <header class="page-header">
+      <h1>블로그</h1>
+      <p>페이지 {currentPage} / {totalPages}</p>
+    </header>
+
+    <PostList posts={posts} />
+
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      baseUrl="/blog"
+    />
+  </div>
+</PageLayout>
+
+<style>
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+  }
+</style>

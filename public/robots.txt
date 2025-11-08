@@ -1,0 +1,6 @@
+# Allow all robots
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://38a232dd.myblog-akg.pages.dev/sitemap-index.xml

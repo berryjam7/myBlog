@@ -1,0 +1,114 @@
+---
+import Navigation from './Navigation.astro';
+import DarkModeToggle from './DarkModeToggle.astro';
+---
+
+<header class="site-header">
+  <div class="container">
+    <div class="header-content">
+      <a href="/" class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <span class="logo-text">Planetary Pulsar</span>
+      </a>
+      
+      <div class="header-right">
+        <Navigation />
+        <DarkModeToggle />
+        <button class="mobile-menu-toggle" aria-label="Toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+  
+  [data-theme="dark"] .site-header {
+    background-color: rgba(22, 33, 62, 0.95);
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--primary-dark);
+    transition: color var(--transition-base);
+  }
+  
+  .logo:hover {
+    color: var(--primary);
+  }
+  
+  .logo svg {
+    color: var(--primary);
+  }
+  
+  .logo-text {
+    display: none;
+  }
+  
+  @media (min-width: 640px) {
+    .logo-text {
+      display: inline;
+    }
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+  
+  @media (max-width: 768px) {
+    .mobile-menu-toggle {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector('.mobile-menu-toggle');
+  const nav = document.querySelector('.navigation');
+  
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      nav.classList.toggle('mobile-open');
+    });
+  }
+</script>

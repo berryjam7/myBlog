@@ -1,0 +1,134 @@
+---
+export interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+
+const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+const showPages = pages.filter(page => {
+  if (page === 1 || page === totalPages) return true;
+  if (page >= currentPage - 1 && page <= currentPage + 1) return true;
+  return false;
+});
+---
+
+{totalPages > 1 && (
+  <nav class="pagination" aria-label="Pagination">
+    <ul class="pagination-list">
+      {currentPage > 1 && (
+        <li>
+          <a 
+            href={currentPage === 2 ? baseUrl : `${baseUrl}/${currentPage - 1}`}
+            class="pagination-link"
+            aria-label="Previous page"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            이전
+          </a>
+        </li>
+      )}
+      
+      {showPages.map((page, index) => {
+        const prevPage = showPages[index - 1];
+        const showEllipsis = prevPage && page - prevPage > 1;
+        
+        return (
+          <>
+            {showEllipsis && (
+              <li>
+                <span class="pagination-ellipsis">...</span>
+              </li>
+            )}
+            <li>
+              <a 
+                href={page === 1 ? baseUrl : `${baseUrl}/${page}`}
+                class={`pagination-link ${page === currentPage ? 'active' : ''}`}
+                aria-label={`Page ${page}`}
+                aria-current={page === currentPage ? 'page' : undefined}
+              >
+                {page}
+              </a>
+            </li>
+          </>
+        );
+      })}
+      
+      {currentPage < totalPages && (
+        <li>
+          <a 
+            href={`${baseUrl}/${currentPage + 1}`}
+            class="pagination-link"
+            aria-label="Next page"
+          >
+            다음
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </li>
+      )}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .pagination {
+    margin-top: 3rem;
+  }
+  
+  .pagination-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .pagination-link {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: all var(--transition-base);
+    border: 1px solid var(--border);
+    background-color: var(--bg-card);
+    min-width: 40px;
+    justify-content: center;
+  }
+  
+  .pagination-link:hover {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    border-color: var(--primary);
+  }
+  
+  .pagination-link.active {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  
+  .pagination-ellipsis {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    color: var(--text-muted);
+  }
+  
+  @media (max-width: 640px) {
+    .pagination-link svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+</style>

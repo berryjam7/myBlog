@@ -1,11 +1,149 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getCollection } from "astro:content";
+import PageLayout from "../layouts/PageLayout.astro";
+import PostList from "../components/PostList.astro";
+import CategoryList from "../components/CategoryList.astro";
+import TagCloud from "../components/TagCloud.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const recentPosts = allPosts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 6);
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<PageLayout
+  title="Planetary Pulsar - 기술 블로그"
+  description="기술과 생각을 공유하는 블로그입니다. 최신 웹 개발, 프로그래밍, 튜토리얼을 만나보세요."
+>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">안녕하세요! 👋</h1>
+      <p class="hero-description">
+        기술과 생각을 공유하는 블로그입니다.<br />
+        웹 개발, 프로그래밍, 그리고 다양한 주제의 글을 만나보세요.
+      </p>
+      <div class="hero-actions">
+        <a href="/blog" class="btn btn-primary btn-lg">블로그 둘러보기</a>
+        <a href="/about" class="btn btn-outline btn-lg">소개 보기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Posts Section -->
+  <section class="recent-posts" style="margin-top: 4rem;">
+    <div class="section-header">
+      <h2>최근 포스트</h2>
+      <a href="/blog" class="view-all-link">
+        전체보기
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </a>
+    </div>
+    <PostList posts={recentPosts} />
+  </section>
+
+  <!-- Sidebar Widgets -->
+  <aside class="sidebar-widgets" style="margin-top: 4rem;">
+    <div class="widget-grid">
+      <CategoryList />
+      <TagCloud />
+    </div>
+  </aside>
+</PageLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 4rem 0;
+    background: linear-gradient(
+      135deg,
+      var(--bg-secondary) 0%,
+      var(--bg-tertiary) 100%
+    );
+    border-radius: var(--radius-xl);
+    margin-bottom: 2rem;
+  }
+
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-description {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.8;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .section-header h2 {
+    font-size: 2rem;
+    margin-bottom: 0;
+  }
+
+  .view-all-link {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--primary-dark);
+    font-weight: 500;
+    transition: gap var(--transition-base);
+  }
+
+  .view-all-link:hover {
+    gap: 0.5rem;
+  }
+
+  .widget-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .hero-description {
+      font-size: 1rem;
+    }
+  }
+</style>
