@@ -1,18 +1,18 @@
-// 블로그 전체 설정
+// Blog site configuration
 export const SITE_CONFIG = {
-    // 사이트 기본 정보
+    // Site basic information
     siteName: "BerryJam's Blog",
     siteDescription: "dev study blog",
     siteUrl: "https://myblog-akg.pages.dev",
 
-    // 작성자 정보
+    // Author information
     author: {
         name: "Berry Jam",
         email: "berryjam7@pm.me",
         bio: "Inspiring game developers for tomorrow",
     },
 
-    // 소셜 링크
+    // Social links
     social: {
         github: "https://github.com/berryjam7",
         twitter: "https://twitter.com",
@@ -20,18 +20,18 @@ export const SITE_CONFIG = {
         // instagram: "https://instagram.com",
     },
 
-    // 페이지네이션
+    // Pagination
     postsPerPage: 9,
 
-    // 홈페이지 텍스트
+    // Homepage text
     hero: {
-        title: "안녕하세요! 👋",
+        title: "Welcome! 👋",
         description: "Shaping tomorrow from an ambiguity into an ideal — one you can't wait to meet.",
         primaryButton: "Explore",
         secondaryButton: "About",
     },
 
-    // 섹션 제목
+    // Section titles
     sections: {
         recentPosts: "Recent",
         allPosts: "All",
@@ -41,7 +41,7 @@ export const SITE_CONFIG = {
         search: "Search",
     },
 
-    // Footer 텍스트
+    // Footer text
     footer: {
         description: "Tomorrow with anticipation",
         quickLinks: "Quick Link",
@@ -56,7 +56,7 @@ export const SITE_CONFIG = {
         builtWith: "Built with",
     },
 
-    // 메시지
+    // Messages
     messages: {
         noPosts: "No posts yet",
         noPostsDescription: "No posts have been published yet. Please visit again later!",

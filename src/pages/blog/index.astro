@@ -1,27 +1,29 @@
 ---
-import { getCollection } from 'astro:content';
-import PageLayout from '../../layouts/PageLayout.astro';
-import PostList from '../../components/PostList.astro';
-import SearchBar from '../../components/SearchBar.astro';
+import { getCollection } from "astro:content";
+import PageLayout from "../../layouts/PageLayout.astro";
+import PostList from "../../components/PostList.astro";
+import SearchBar from "../../components/SearchBar.astro";
 
-const allPosts = await getCollection('blog', ({ data }) => !data.draft);
-const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
 ---
 
-<PageLayout 
-  title="블로그 - 모든 포스트"
-  description="모든 블로그 포스트를 둘러보세요. 최신 기술, 튜토리얼, 그리고 다양한 주제의 글을 만나보실 수 있습니다."
+<PageLayout
+  title="Blog - All Posts"
+  description="Browse all blog posts. Discover the latest tech, tutorials, and various topics."
 >
   <div class="blog-page">
     <header class="page-header">
-      <h1>블로그</h1>
-      <p>총 {sortedPosts.length}개의 포스트</p>
+      <h1>Blog</h1>
+      <p>Total {sortedPosts.length} posts</p>
     </header>
-    
+
     <div style="margin: 2rem 0;">
       <SearchBar />
     </div>
-    
+
     <PostList posts={sortedPosts} />
   </div>
 </PageLayout>
@@ -31,12 +33,12 @@ const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pu
     text-align: center;
     margin-bottom: 3rem;
   }
-  
+
   .page-header h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
   }
-  
+
   .page-header p {
     color: var(--text-secondary);
     font-size: 1.125rem;

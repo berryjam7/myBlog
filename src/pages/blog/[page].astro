@@ -36,13 +36,13 @@ const { posts, currentPage, totalPages } = Astro.props;
 ---
 
 <PageLayout
-  title={`블로그 - 페이지 ${currentPage}`}
-  description={`블로그 포스트 목록 - ${currentPage} 페이지`}
+  title={`Blog - Page ${currentPage}`}
+  description={`Blog posts list - Page ${currentPage}`}
 >
   <div class="blog-page">
     <header class="page-header">
-      <h1>블로그</h1>
-      <p>페이지 {currentPage} / {totalPages}</p>
+      <h1>Blog</h1>
+      <p>Page {currentPage} / {totalPages}</p>
     </header>
 
     <PostList posts={posts} />

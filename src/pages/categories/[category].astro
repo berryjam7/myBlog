@@ -1,23 +1,23 @@
 ---
-import { getCollection } from 'astro:content';
-import type { GetStaticPaths } from 'astro';
-import PageLayout from '../../layouts/PageLayout.astro';
-import PostList from '../../components/PostList.astro';
+import { getCollection } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import PostList from "../../components/PostList.astro";
 
 export const getStaticPaths = (async () => {
-  const allPosts = await getCollection('blog', ({ data }) => !data.draft);
-  
+  const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+
   // Get unique categories
-  const categories = [...new Set(allPosts.map(post => post.data.category))];
-  
-  return categories.map(category => {
+  const categories = [...new Set(allPosts.map((post) => post.data.category))];
+
+  return categories.map((category) => {
     const posts = allPosts
-      .filter(post => post.data.category === category)
+      .filter((post) => post.data.category === category)
       .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-    
+
     return {
       params: { category },
-      props: { category, posts }
+      props: { category, posts },
     };
   });
 }) satisfies GetStaticPaths;
@@ -25,30 +25,52 @@ export const getStaticPaths = (async () => {
 const { category, posts } = Astro.props;
 ---
 
-<PageLayout 
-  title={`${category} - 카테고리`}
-  description={`${category} 카테고리의 모든 포스트를 둘러보세요.`}
+<PageLayout
+  title={`${category} - Category`}
+  description={`Browse all posts in ${category} category.`}
 >
   <div class="category-page">
     <header class="page-header">
       <div class="category-badge">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+          ></path>
         </svg>
         {category}
       </div>
       <h1>{category}</h1>
-      <p>{posts.length}개의 포스트</p>
+      <p>{posts.length} posts</p>
     </header>
-    
+
     <PostList posts={posts} />
-    
+
     <div style="text-align: center; margin-top: 3rem;">
       <a href="/categories" class="btn btn-outline">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
-        모든 카테고리 보기
+        View All Categories
       </a>
     </div>
   </div>
@@ -59,7 +81,7 @@ const { category, posts } = Astro.props;
     text-align: center;
     margin-bottom: 3rem;
   }
-  
+
   .category-badge {
     display: inline-flex;
     align-items: center;
@@ -72,12 +94,12 @@ const { category, posts } = Astro.props;
     font-size: 1rem;
     margin-bottom: 1rem;
   }
-  
+
   .page-header h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
   }
-  
+
   .page-header p {
     color: var(--text-secondary);
     font-size: 1.125rem;

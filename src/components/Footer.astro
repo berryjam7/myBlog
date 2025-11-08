@@ -74,10 +74,10 @@ const currentYear = new Date().getFullYear();
       <div class="footer-section">
         <h4 class="footer-section-title">{SITE_CONFIG.footer.quickLinks}</h4>
         <ul class="footer-links">
-          <li><a href="/blog">블로그</a></li>
-          <li><a href="/categories">카테고리</a></li>
-          <li><a href="/tags">태그</a></li>
-          <li><a href="/about">소개</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/categories">Categories</a></li>
+          <li><a href="/tags">Tags</a></li>
+          <li><a href="/about">About</a></li>
         </ul>
       </div>
 
@@ -86,7 +86,7 @@ const currentYear = new Date().getFullYear();
           {SITE_CONFIG.footer.categoriesTitle}
         </h4>
         <ul class="footer-links">
-          <li><a href="/categories">전체 카테고리</a></li>
+          <li><a href="/categories">All Categories</a></li>
         </ul>
       </div>
 
@@ -118,34 +118,12 @@ const currentYear = new Date().getFullYear();
       <p>
         {SITE_CONFIG.footer.builtWith}
         <a href="https://astro.build" target="_blank" rel="noopener noreferrer"
-          >Astro</a>
+          >Astro</a
+        >
       </p>
     </div>
   </div>
 </footer>
-
-<div class="footer-section">
-  <h4 class="footer-section-title">구독하기</h4>
-  <p class="footer-description">새로운 포스트를 이메일로 받아보세요.</p>
-  <div class="newsletter-form">
-    <input
-      type="email"
-      placeholder="이메일 주소"
-      aria-label="Email for newsletter"
-    />
-    <button class="btn btn-primary btn-sm">구독</button>
-  </div>
-</div>
-
-<div class="footer-bottom">
-  <p>&copy; {currentYear} Planetary Pulsar. All rights reserved.</p>
-  <p>
-    Built with <a
-      href="https://astro.build"
-      target="_blank"
-      rel="noopener noreferrer">Astro</a>
-  </p>
-</div>
 
 <style>
   .site-footer {

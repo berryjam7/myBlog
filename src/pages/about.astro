@@ -4,49 +4,59 @@ import { SITE_CONFIG } from "../config";
 ---
 
 <PageLayout
-  title="소개"
-  description={`${SITE_CONFIG.siteName} 블로그에 대해 알아보세요.`}
+  title="About"
+  description={`Learn more about ${SITE_CONFIG.siteName}.`}
 >
   <article class="about-page prose" style="max-width: 800px; margin: 0 auto;">
-    <h1>안녕하세요! 👋</h1>
+    <h1>Hello! 👋</h1>
 
     <p>
-      <strong>{SITE_CONFIG.siteName}</strong>에 오신 것을 환영합니다.
+      Welcome to <strong>{SITE_CONFIG.siteName}</strong>.
       {SITE_CONFIG.siteDescription}
     </p>
 
-    <h2>이 블로그는...</h2>
+    <h2>About This Blog...</h2>
 
     <p>
-      여기에 블로그 소개 내용을 작성하세요. 이 텍스트는 <code
+      Write your blog introduction here. You can edit this text in the <code
         >src/pages/about.astro</code
-      > 파일에서 수정할 수 있습니다.
+      > file.
     </p>
 
-    <h2>주요 주제</h2>
+    <h2>Main Topics</h2>
 
     <ul>
-      <li><strong>웹 개발</strong> - 프론트엔드와 백엔드 기술</li>
-      <li><strong>프로그래밍</strong> - 다양한 프로그래밍 언어와 패러다임</li>
-      <li><strong>튜토리얼</strong> - 단계별 가이드와 실전 예제</li>
-      <li><strong>개발 후기</strong> - 도구, 라이브러리, 프레임워크 리뷰</li>
+      <li>
+        <strong>Web Development</strong> - Frontend and backend technologies
+      </li>
+      <li>
+        <strong>Programming</strong> - Various programming languages and paradigms
+      </li>
+      <li>
+        <strong>Tutorials</strong> - Step-by-step guides and practical examples
+      </li>
+      <li>
+        <strong>Reviews</strong> - Tools, libraries, and framework reviews
+      </li>
     </ul>
   </article>
 
-  <h2>기술 스택</h2>
+  <h2>Tech Stack</h2>
 
-  <p>이 블로그는 다음 기술들로 구축되었습니다:</p>
+  <p>This blog is built with the following technologies:</p>
 
   <ul>
-    <li><strong>Astro</strong> - 정적 사이트 생성기</li>
-    <li><strong>TypeScript</strong> - 타입 안전성</li>
-    <li><strong>Cloudflare Pages</strong> - 호스팅 및 배포</li>
-    <li><strong>Markdown/MDX</strong> - 콘텐츠 작성</li>
+    <li><strong>Astro</strong> - Static site generator</li>
+    <li><strong>TypeScript</strong> - Type safety</li>
+    <li><strong>Cloudflare Pages</strong> - Hosting and deployment</li>
+    <li><strong>Markdown/MDX</strong> - Content creation</li>
   </ul>
 
-  <h2>연락하기</h2>
+  <h2>Contact</h2>
 
-  <p>궁금한 점이 있으시거나 협업 제안이 있으시다면 언제든 연락해주세요!</p>
+  <p>
+    Feel free to reach out if you have any questions or collaboration ideas!
+  </p>
 
   <div style="display: flex; gap: 1rem; margin-top: 2rem;">
     <a
@@ -92,6 +102,6 @@ import { SITE_CONFIG } from "../config";
   <hr />
 
   <p style="text-align: center; color: var(--text-muted);">
-    <small>이 페이지는 언제든지 업데이트될 수 있습니다.</small>
+    <small>This page may be updated at any time.</small>
   </p>
 </PageLayout>

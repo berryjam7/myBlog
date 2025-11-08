@@ -1,22 +1,21 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection } from "astro:content";
 
-const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
 
 // Get all tags with post counts
 const tagMap = new Map<string, number>();
-allPosts.forEach(post => {
-  post.data.tags.forEach(tag => {
+allPosts.forEach((post) => {
+  post.data.tags.forEach((tag) => {
     tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
   });
 });
 
-const tags = Array.from(tagMap.entries())
-  .sort((a, b) => b[1] - a[1]); // Sort by count descending
+const tags = Array.from(tagMap.entries()).sort((a, b) => b[1] - a[1]); // Sort by count descending
 
 // Calculate font size based on count
-const maxCount = Math.max(...tags.map(t => t[1]));
-const minCount = Math.min(...tags.map(t => t[1]));
+const maxCount = Math.max(...tags.map((t) => t[1]));
+const minCount = Math.min(...tags.map((t) => t[1]));
 
 function getFontSize(count: number): number {
   const ratio = (count - minCount) / (maxCount - minCount || 1);
@@ -25,18 +24,20 @@ function getFontSize(count: number): number {
 ---
 
 <div class="tag-cloud">
-  <h3 class="cloud-title">태그</h3>
+  <h3 class="cloud-title">Tags</h3>
   <div class="tags">
-    {tags.map(([tag, count]) => (
-      <a 
-        href={`/tags/${tag}`} 
-        class="tag-link"
-        style={`font-size: ${getFontSize(count)}rem;`}
-        title={`${count}개의 포스트`}
-      >
-        #{tag}
-      </a>
-    ))}
+    {
+      tags.map(([tag, count]) => (
+        <a
+          href={`/tags/${tag}`}
+          class="tag-link"
+          style={`font-size: ${getFontSize(count)}rem;`}
+          title={`${count} posts`}
+        >
+          #{tag}
+        </a>
+      ))
+    }
   </div>
 </div>
 
@@ -47,21 +48,21 @@ function getFontSize(count: number): number {
     padding: 1.5rem;
     border: 1px solid var(--border);
   }
-  
+
   .cloud-title {
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 1rem;
     color: var(--text-primary);
   }
-  
+
   .tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
     align-items: center;
   }
-  
+
   .tag-link {
     color: var(--primary-dark);
     text-decoration: none;
@@ -70,7 +71,7 @@ function getFontSize(count: number): number {
     border-radius: var(--radius-sm);
     font-weight: 500;
   }
-  
+
   .tag-link:hover {
     background-color: var(--primary-light);
     color: var(--primary-dark);

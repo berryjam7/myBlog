@@ -1,28 +1,28 @@
 ---
-import { getCollection } from 'astro:content';
-import type { GetStaticPaths } from 'astro';
-import PageLayout from '../../layouts/PageLayout.astro';
-import PostList from '../../components/PostList.astro';
+import { getCollection } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import PostList from "../../components/PostList.astro";
 
 export const getStaticPaths = (async () => {
-  const allPosts = await getCollection('blog', ({ data }) => !data.draft);
-  
+  const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+
   // Get all unique tags
   const tagsSet = new Set<string>();
-  allPosts.forEach(post => {
-    post.data.tags.forEach(tag => tagsSet.add(tag));
+  allPosts.forEach((post) => {
+    post.data.tags.forEach((tag) => tagsSet.add(tag));
   });
-  
+
   const tags = Array.from(tagsSet);
-  
-  return tags.map(tag => {
+
+  return tags.map((tag) => {
     const posts = allPosts
-      .filter(post => post.data.tags.includes(tag))
+      .filter((post) => post.data.tags.includes(tag))
       .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-    
+
     return {
       params: { tag },
-      props: { tag, posts }
+      props: { tag, posts },
     };
   });
 }) satisfies GetStaticPaths;
@@ -30,31 +30,53 @@ export const getStaticPaths = (async () => {
 const { tag, posts } = Astro.props;
 ---
 
-<PageLayout 
-  title={`#${tag} - 태그`}
-  description={`#${tag} 태그가 포함된 모든 포스트를 둘러보세요.`}
+<PageLayout
+  title={`#${tag} - Tag`}
+  description={`Browse all posts tagged with #${tag}.`}
 >
   <div class="tag-page">
     <header class="page-header">
       <div class="tag-badge">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"
+          ></path>
           <line x1="7" y1="7" x2="7.01" y2="7"></line>
         </svg>
         #{tag}
       </div>
       <h1>#{tag}</h1>
-      <p>{posts.length}개의 포스트</p>
+      <p>{posts.length} posts</p>
     </header>
-    
+
     <PostList posts={posts} />
-    
+
     <div style="text-align: center; margin-top: 3rem;">
       <a href="/tags" class="btn btn-outline">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
-        모든 태그 보기
+        View All Tags
       </a>
     </div>
   </div>
@@ -65,7 +87,7 @@ const { tag, posts } = Astro.props;
     text-align: center;
     margin-bottom: 3rem;
   }
-  
+
   .tag-badge {
     display: inline-flex;
     align-items: center;
@@ -78,12 +100,12 @@ const { tag, posts } = Astro.props;
     font-size: 1rem;
     margin-bottom: 1rem;
   }
-  
+
   .page-header h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
   }
-  
+
   .page-header p {
     color: var(--text-secondary);
     font-size: 1.125rem;
